@@ -63,9 +63,9 @@ fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
 			for x in 0..MATCH_SIZE {
 				let p1 = img1.get_pixel(x, y);
 				let p2 = img2.get_pixel(x, y);
-				cr += (full_range(reduce(p1[0]) as f32 / 255.0) * full_range(reduce(p2[0]) as f32 / 255.0)).abs() as f32;
-				cg += (full_range(reduce(p1[1]) as f32 / 255.0) * full_range(reduce(p2[1]) as f32 / 255.0)).abs() as f32;
-				cb += (full_range(reduce(p1[2]) as f32 / 255.0) * full_range(reduce(p2[2]) as f32 / 255.0)).abs() as f32;
+				cr += ((p1[0] as f32 / 255.0) * (p2[0] as f32 / 255.0)).abs() as f32;
+				cg += ((p1[1] as f32 / 255.0) * (p2[1] as f32 / 255.0)).abs() as f32;
+				cb += ((p1[2] as f32 / 255.0) * (p2[2] as f32 / 255.0)).abs() as f32;
 			}
 			(cr, cg, cb)
 		})
