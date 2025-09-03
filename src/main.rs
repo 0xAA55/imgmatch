@@ -92,6 +92,6 @@ fn main() -> ExitCode {
 	if args.len() < 3 {usage(); return ExitCode::from(1);}
 	
 	let error = match_image(&PathBuf::from(&args[1]), &PathBuf::from(&args[2]));
-	println!("{error}");
+	println!("{error:.3}");
 	ExitCode::from(0)
 }
