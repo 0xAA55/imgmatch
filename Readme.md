@@ -10,7 +10,45 @@
 imgmatch <image1> <image2>
 ```
 
-The program will try to resize the two images into a same size, then run pixel color difference summing, print out a value.
+The program will try to resize the two images to the same size, then run pixel color difference summing, and print out a value.
 
 * If the value is greater than `0.01`, the two images could be considered as different images.
 * If the value is less than or equal to `0.01`, the two images could be considered as identical images.
+* The program itself doesn't judge the images; you should use your images to test if a good threshold is `0.01`.
+
+## The algorithm
+
+See the pseudo code here:
+```
+
+for y in 0..MATCH_SIZE { // This line runs in parallel
+	for x in 0..MATCH_SIZE {
+		let p1 = img1.get_pixel(x, y);
+		let p2 = img2.get_pixel(x, y);
+		sr += ((p1.r as f32 / 255.0) - (p2.r as f32 / 255.0)).abs() as f32;
+		sg += ((p1.g as f32 / 255.0) - (p2.g as f32 / 255.0)).abs() as f32;
+		sb += ((p1.b as f32 / 255.0) - (p2.b as f32 / 255.0)).abs() as f32;
+	}
+}
+let error = ((sr + sg + sb) / (MATCH_SIZE * MATCH_SIZE * 3) as f32).max(0.0);
+println!("{error:.3}");
+```
+
+## Supported formats:
+
+* PNG
+* JPEG, loads 4x faster than normal
+* GIF
+* WEBP
+* PNM
+* TIFF
+* TGA
+* DDS
+* BMP
+* ICO
+* HDR
+* OpenEXR
+* Farbfeld
+* AVIF
+* QOI
+* PCX
