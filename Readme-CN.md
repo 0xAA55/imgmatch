@@ -18,9 +18,8 @@ imgmatch <image1> <image2>
 
 ## 算法
 
-请参考一下伪代码：
+请参考伪代码：
 ```
-
 for y in 0..MATCH_SIZE { // 此行并行运行
 	for x in 0..MATCH_SIZE {
 		let p1 = img1.get_pixel(x, y);
