@@ -1,0 +1,8 @@
+[package]
+name = "imgmatch"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+image = "0.25.6"
+turbojpeg = { version = "1.3.3", features = ["image"] }
