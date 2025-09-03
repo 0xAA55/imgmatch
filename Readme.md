@@ -20,7 +20,6 @@ The program will try to resize the two images to the same size, then run pixel c
 
 See the pseudo code here:
 ```
-
 for y in 0..MATCH_SIZE { // This line runs in parallel
 	for x in 0..MATCH_SIZE {
 		let p1 = img1.get_pixel(x, y);
