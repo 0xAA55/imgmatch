@@ -75,3 +75,9 @@ fn main() -> ExitCode {
 	println!("{error:.3}");
 	ExitCode::from(0)
 }
+
+#[test]
+fn test() {
+	let error = match_image(&PathBuf::from("test1.png"), &PathBuf::from("test2.JPG"));
+	println!("{error:.3}");
+}
