@@ -52,3 +52,10 @@ println!("{error:.3}");
 * AVIF
 * QOI
 * PCX
+
+## Deployment
+
+First is to install Rust.
+
+* On Non-NUMA systems, just run `cargo build --release` in the project directory to get the binary program, and use the program as this document says.
+* On NUMA systems, compile with the feature `numa` enabled by running  `cargo build --release --features numa` to get the binary program that's NUMA-specific.

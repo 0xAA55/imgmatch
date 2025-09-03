@@ -51,3 +51,10 @@ println!("{error:.3}");
 * AVIF
 * QOI
 * PCX
+
+## 部署
+
+首先是安装 Rust。
+
+* 在非 NUMA 系统上，只需在项目目录中运行 `cargo build --release` 即可获取二进制程序，并按照本文档的说明使用该程序。
+* 在 NUMA 系统上，运行 `cargo build --release --features numa` 启用 `numa` 特性进行编译，即可获取特定于 NUMA 的二进制程序。
