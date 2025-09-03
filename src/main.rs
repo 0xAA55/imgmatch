@@ -18,6 +18,7 @@ use image::{
 use turbojpeg::{
 	decompress_image,
 };
+use rayon::prelude::*;
 
 const MATCH_SIZE: u32 = 512;
 
@@ -45,32 +46,25 @@ fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
 	let mut sr: f32 = 0.0;
 	let mut sg: f32 = 0.0;
 	let mut sb: f32 = 0.0;
-	let mut cols: Vec<_> = (0..MATCH_SIZE).map(|y| {
+	let cols: Vec<_> = (0..MATCH_SIZE).into_par_iter().map(move |y| {
 		let img1 = img1.clone();
 		let img2 = img2.clone();
-		spawn(move || {
-			let mut cr: f32 = 0.0;
-			let mut cg: f32 = 0.0;
-			let mut cb: f32 = 0.0;
-			for x in 0..MATCH_SIZE {
-				let p1 = img1.get_pixel(x, y);
-				let p2 = img2.get_pixel(x, y);
-				cr += ((p1[0] as f32 / 255.0) - (p2[0] as f32 / 255.0)).abs() as f32;
-				cg += ((p1[1] as f32 / 255.0) - (p2[1] as f32 / 255.0)).abs() as f32;
-				cb += ((p1[2] as f32 / 255.0) - (p2[2] as f32 / 255.0)).abs() as f32;
-			}
-			(cr, cg, cb)
-		})
-	}).collect();
-	loop {
-		if let Some(job) = cols.pop() {
-			let (cr, cg, cb) = job.join().unwrap();
-			sr += cr;
-			sg += cg;
-			sb += cb;
-		} else {
-			break;
+		let mut cr: f32 = 0.0;
+		let mut cg: f32 = 0.0;
+		let mut cb: f32 = 0.0;
+		for x in 0..MATCH_SIZE {
+			let p1 = img1.get_pixel(x, y);
+			let p2 = img2.get_pixel(x, y);
+			cr += ((p1[0] as f32 / 255.0) - (p2[0] as f32 / 255.0)).abs() as f32;
+			cg += ((p1[1] as f32 / 255.0) - (p2[1] as f32 / 255.0)).abs() as f32;
+			cb += ((p1[2] as f32 / 255.0) - (p2[2] as f32 / 255.0)).abs() as f32;
 		}
+		(cr, cg, cb)
+	}).collect();
+	for (cr, cg, cb) in cols.iter() {
+		sr += cr;
+		sg += cg;
+		sb += cb;
 	}
 	((sr + sg + sb) / (MATCH_SIZE * MATCH_SIZE * 3) as f32).max(0.0)
 }
