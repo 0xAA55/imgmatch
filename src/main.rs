@@ -26,7 +26,7 @@ fn load_image(path: &PathBuf) -> RgbImage {
 	}
 }
 
-fn reduce_color(c: u8) -> u8 {
+fn reduce(c: u8) -> u8 {
 	c & 0xF8
 }
 
