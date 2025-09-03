@@ -27,15 +27,19 @@ fn load_image(path: &PathBuf) -> RgbImage {
 	}
 }
 
-fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
-	let imgs: Vec<_> = [img1, img2].into_par_iter().map(move |path| {
+fn load_images_for_match(images: &[PathBuf]) -> Vec<RgbImage> {
+	images.into_par_iter().map(move |path| {
 		let img = load_image(&path);
-		resize(&img, MATCH_SIZE, MATCH_SIZE, FilterType::Lanczos3)
-	}).collect();
+		let ret = resize(&img, MATCH_SIZE, MATCH_SIZE, FilterType::Triangle);
+		ret
+	}).collect()
+}
+
+fn match_image(img1: &RgbImage, img2: &RgbImage) -> f32 {
 	let mut sr: f32 = 0.0;
 	let mut sg: f32 = 0.0;
 	let mut sb: f32 = 0.0;
-	let rows: Vec<_> = imgs[0].enumerate_rows().zip(imgs[1].enumerate_rows()).map(|((_, row1), (_, row2))| {
+	let rows: Vec<_> = img1.enumerate_rows().zip(img2.enumerate_rows()).map(|((_, row1), (_, row2))| {
 		(row1, row2)
 	}).collect();
 	let rows: Vec<_> = rows.into_par_iter().map(move |(row1, row2)| {
@@ -70,13 +74,20 @@ fn main() -> ExitCode {
 	let args: Vec<String> = std::env::args().collect();
 	if args.len() < 3 {usage(); return ExitCode::from(1);}
 	
-	let error = match_image(&PathBuf::from(&args[1]), &PathBuf::from(&args[2]));
+	let images = load_images_for_match(&[PathBuf::from(&args[1]), PathBuf::from(&args[2])]);
+	let error = match_image(&images[0], &images[1]);
 	println!("{error:.3}");
 	ExitCode::from(0)
 }
 
 #[test]
 fn test() {
-	let error = match_image(&PathBuf::from("test1.png"), &PathBuf::from("test2.JPG"));
-	println!("{error:.3}");
+	let images = ["test1.png", "test2.JPG", "test3.jpg", "test4.png", "test5.png"];
+	let images: Vec<_> = load_images_for_match(&images.iter().map(|s|PathBuf::from(s)).collect::<Vec<_>>()).into_iter().zip(images).collect();
+	for (img1, path1) in images.iter() {
+		for (img2, path2) in images.iter() {
+			let error = match_image(img1, img2);
+			println!("{path1} - {path2} = {error:.3}");
+		}
+	}
 }
