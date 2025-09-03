@@ -58,7 +58,7 @@ fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
 		sg += (full_range(reduce_color(p1.0[1]) as f32 / 255.0) * full_range(reduce_color(p2.0[1]) as f32 / 255.0)).abs() as f32;
 		sb += (full_range(reduce_color(p1.0[2]) as f32 / 255.0) * full_range(reduce_color(p2.0[2]) as f32 / 255.0)).abs() as f32;
 	}
-	((sr.max(sg).max(sb)) / (MATCH_SIZE * MATCH_SIZE) as f32).max(0.0)
+	((sr + sg + sb) / (MATCH_SIZE * MATCH_SIZE * 3) as f32).max(0.0)
 }
 
 fn usage() {
