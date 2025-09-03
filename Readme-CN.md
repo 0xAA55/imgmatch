@@ -59,6 +59,10 @@ println!("{error:.3}");
 * 在非 NUMA 系统上，只需在项目目录中运行 `cargo build --release` 即可获取二进制程序，并按照本文档的说明使用该程序。
 * 在 NUMA 系统上，运行 `cargo build --release --features numa` 启用 `numa` 特性进行编译，即可获取特定于 NUMA 的二进制程序。
 
+## 性能分析
+
+* 使用 `profiling` 功能进行编译，每个步骤（包括图像加载、调整大小以及图像差异求和）的耗时将通过 `stderr` 显示。
+
 ## 测试结果（参考用）
 
 	test1.png - test1.png = 0.000
