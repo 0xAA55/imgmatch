@@ -29,14 +29,6 @@ fn load_image(path: &PathBuf) -> RgbImage {
 	}
 }
 
-fn reduce(c: u8) -> u8 {
-	c & 0xF8
-}
-
-fn full_range(half: f32) -> f32 {
-	half * 2.0 - 1.0
-}
-
 fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
 	let img1 = Arc::new(img1.clone());
 	let img2 = Arc::new(img2.clone());
