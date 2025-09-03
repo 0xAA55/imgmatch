@@ -16,6 +16,11 @@ use turbojpeg::{
 	decompress_image,
 };
 use rayon::prelude::*;
+#[cfg(feature = "profiling")]
+use std::{
+	io::{stderr, Write},
+	time::Instant,
+};
 
 const MATCH_SIZE: u32 = 512;
 
@@ -29,8 +34,12 @@ fn load_image(path: &PathBuf) -> RgbImage {
 
 fn load_images_for_match(images: &[PathBuf]) -> Vec<RgbImage> {
 	images.into_par_iter().map(move |path| {
+		#[cfg(feature = "profiling")] let now = Instant::now();
 		let img = load_image(&path);
+		#[cfg(feature = "profiling")] eprintln!("Loaded {path:?} in {} ms", now.elapsed().as_millis());
+		#[cfg(feature = "profiling")] let now = Instant::now();
 		let ret = resize(&img, MATCH_SIZE, MATCH_SIZE, FilterType::Triangle);
+		#[cfg(feature = "profiling")] eprintln!("Resized {path:?} in {} ms", now.elapsed().as_millis());
 		ret
 	}).collect()
 }
@@ -42,6 +51,7 @@ fn match_image(img1: &RgbImage, img2: &RgbImage) -> f32 {
 	let rows: Vec<_> = img1.enumerate_rows().zip(img2.enumerate_rows()).map(|((_, row1), (_, row2))| {
 		(row1, row2)
 	}).collect();
+	#[cfg(feature = "profiling")] let now = Instant::now();
 	let rows: Vec<_> = rows.into_par_iter().map(move |(row1, row2)| {
 		#[cfg(feature = "numa")]
 		let (mut row1, mut row2) = (row1.collect::<Vec<_>>().into_iter(), row2.collect::<Vec<_>>().into_iter());
@@ -63,6 +73,8 @@ fn match_image(img1: &RgbImage, img2: &RgbImage) -> f32 {
 		sg += rg;
 		sb += rb;
 	}
+	#[cfg(feature = "profiling")] eprint!("Summing errors in {} micro secs\t", now.elapsed().as_micros());
+	#[cfg(feature = "profiling")] let _ = stderr().flush();
 	((sr + sg + sb) / (MATCH_SIZE * MATCH_SIZE * 3) as f32).max(0.0)
 }
 
