@@ -16,7 +16,7 @@ use turbojpeg::{
 	decompress_image,
 };
 
-const MATCH_SIZE: u32 = 320;
+const MATCH_SIZE: u32 = 512;
 
 fn load_image(path: &PathBuf) -> RgbImage {
 	let image_data = std::fs::read(path).unwrap();
