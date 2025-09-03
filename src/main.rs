@@ -37,16 +37,18 @@ fn full_range(half: f32) -> f32 {
 }
 
 fn match_image(img1: &PathBuf, img2: &PathBuf) -> f32 {
-	let img1 = load_image(img1);
-	let img2 = load_image(img2);
+	let img1 = Arc::new(img1.clone());
+	let img2 = Arc::new(img2.clone());
 	let job1 = spawn(move || {
-		resize(&img1, MATCH_SIZE, MATCH_SIZE, FilterType::Lanczos3)
+		let img1 = load_image(&img1);
+		Arc::new(resize(&img1, MATCH_SIZE, MATCH_SIZE, FilterType::Lanczos3))
 	});
 	let job2 = spawn(move || {
-		resize(&img2, MATCH_SIZE, MATCH_SIZE, FilterType::Lanczos3)
+		let img2 = load_image(&img2);
+		Arc::new(resize(&img2, MATCH_SIZE, MATCH_SIZE, FilterType::Lanczos3))
 	});
-	let img1 = Arc::new(job1.join().unwrap());
-	let img2 = Arc::new(job2.join().unwrap());
+	let img1 = job1.join().unwrap();
+	let img2 = job2.join().unwrap();
 	let mut sr: f32 = 0.0;
 	let mut sg: f32 = 0.0;
 	let mut sb: f32 = 0.0;
