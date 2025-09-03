@@ -58,3 +58,31 @@ First is to install Rust.
 
 * On Non-NUMA systems, just run `cargo build --release` in the project directory to get the binary program, and use the program as this document says.
 * On NUMA systems, compile with the feature `numa` enabled by running  `cargo build --release --features numa` to get the binary program that's NUMA-specific.
+
+## Test results for a reference
+
+	test1.png - test1.png = 0.000
+	test1.png - test2.JPG = 0.004
+	test1.png - test3.jpg = 0.401
+	test1.png - test4.png = 0.720
+	test1.png - test5.png = 0.402
+	test2.JPG - test1.png = 0.004
+	test2.JPG - test2.JPG = 0.000
+	test2.JPG - test3.jpg = 0.401
+	test2.JPG - test4.png = 0.720
+	test2.JPG - test5.png = 0.402
+	test3.jpg - test1.png = 0.401
+	test3.jpg - test2.JPG = 0.401
+	test3.jpg - test3.jpg = 0.000
+	test3.jpg - test4.png = 0.464
+	test3.jpg - test5.png = 0.007
+	test4.png - test1.png = 0.720
+	test4.png - test2.JPG = 0.720
+	test4.png - test3.jpg = 0.464
+	test4.png - test4.png = 0.000
+	test4.png - test5.png = 0.463
+	test5.png - test1.png = 0.402
+	test5.png - test2.JPG = 0.402
+	test5.png - test3.jpg = 0.007
+	test5.png - test4.png = 0.463
+	test5.png - test5.png = 0.000

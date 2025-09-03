@@ -58,3 +58,31 @@ println!("{error:.3}");
 
 * 在非 NUMA 系统上，只需在项目目录中运行 `cargo build --release` 即可获取二进制程序，并按照本文档的说明使用该程序。
 * 在 NUMA 系统上，运行 `cargo build --release --features numa` 启用 `numa` 特性进行编译，即可获取特定于 NUMA 的二进制程序。
+
+## 测试结果（参考用）
+
+	test1.png - test1.png = 0.000
+	test1.png - test2.JPG = 0.004
+	test1.png - test3.jpg = 0.401
+	test1.png - test4.png = 0.720
+	test1.png - test5.png = 0.402
+	test2.JPG - test1.png = 0.004
+	test2.JPG - test2.JPG = 0.000
+	test2.JPG - test3.jpg = 0.401
+	test2.JPG - test4.png = 0.720
+	test2.JPG - test5.png = 0.402
+	test3.jpg - test1.png = 0.401
+	test3.jpg - test2.JPG = 0.401
+	test3.jpg - test3.jpg = 0.000
+	test3.jpg - test4.png = 0.464
+	test3.jpg - test5.png = 0.007
+	test4.png - test1.png = 0.720
+	test4.png - test2.JPG = 0.720
+	test4.png - test3.jpg = 0.464
+	test4.png - test4.png = 0.000
+	test4.png - test5.png = 0.463
+	test5.png - test1.png = 0.402
+	test5.png - test2.JPG = 0.402
+	test5.png - test3.jpg = 0.007
+	test5.png - test4.png = 0.463
+	test5.png - test5.png = 0.000
