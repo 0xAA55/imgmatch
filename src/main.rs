@@ -36,10 +36,10 @@ fn load_images_for_match(images: &[PathBuf]) -> Vec<RgbImage> {
 	images.into_par_iter().map(move |path| {
 		#[cfg(feature = "profiling")] let now = Instant::now();
 		let img = load_image(&path);
-		#[cfg(feature = "profiling")] eprintln!("Loaded {path:?} in {} ms", now.elapsed().as_millis());
+		#[cfg(feature = "profiling")] eprintln!("Loaded {path:?} in {:.3} ms", now.elapsed().as_micros() as f32 * 0.001);
 		#[cfg(feature = "profiling")] let now = Instant::now();
 		let ret = resize(&img, MATCH_SIZE, MATCH_SIZE, FilterType::Triangle);
-		#[cfg(feature = "profiling")] eprintln!("Resized {path:?} in {} ms", now.elapsed().as_millis());
+		#[cfg(feature = "profiling")] eprintln!("Resized {path:?} in {:.3} ms", now.elapsed().as_micros() as f32 * 0.001);
 		ret
 	}).collect()
 }
@@ -73,7 +73,7 @@ fn match_image(img1: &RgbImage, img2: &RgbImage) -> f32 {
 		sg += rg;
 		sb += rb;
 	}
-	#[cfg(feature = "profiling")] eprint!("Summing errors in {} micro secs\t", now.elapsed().as_micros());
+	#[cfg(feature = "profiling")] eprint!("Summing errors in {:.3} ms\t", now.elapsed().as_micros() as f32 * 0.001);
 	#[cfg(feature = "profiling")] let _ = stderr().flush();
 	((sr + sg + sb) / (MATCH_SIZE * MATCH_SIZE * 3) as f32).max(0.0)
 }
